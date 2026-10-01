@@ -1,0 +1,63 @@
+@page "/StationInformation"
+@using DublinBikesWeb.Services
+@using DublinBikesWeb.Models
+
+@inject IDublinBikeService DublinBikeService
+
+<h3>Station Information</h3>
+
+<input class="form-control mb-3" placeholder="Search for a station..." @bind="searchTerm" @bind:event="oninput" />
+
+@if (error)
+{
+    <p class="text-danger">Error loading stations.</p>
+}
+else if (stations == null)
+{
+    <p>Loading station information...</p>
+}
+else
+{
+    <div class="row">
+        @foreach (var station in stations)
+        {
+            if (string.IsNullOrEmpty(searchTerm) || (station?.name?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ??
+    false))
+            {
+                <div class="col-md-4 mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">@station?.name</h5>
+                            <p class="card-text">Station number: @station?.number</p>
+                            <p class="card-text">Status: @station?.status</p>
+                            <p class="card-text">Position: @station?.position?.latitude, @station?.position?.longitude</p>
+                            <p class="card-text">Bikes Available: @station?.totalStands?.availabilities?.bikes</p>
+                            <p class="card-text">Free stands: @station?.totalStands?.availabilities?.stands</p>
+                            <p class="card-text">Last updated: @station?.lastUpdate</p>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+}
+
+@code
+{
+    private List<DublinBikesData>? stations;
+    private string searchTerm = "";
+    private bool error;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            stations = (await DublinBikeService.GetDublinBikesDataAsync()).ToList();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error fetching stations status: {ex.Message}");
+            error = true;
+        }
+    }
+}
