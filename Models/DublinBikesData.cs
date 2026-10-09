@@ -1,6 +1,6 @@
 namespace DublinBikesWeb.Models
 {
-    public class DublinBikesData
+    public class DublinBikesData // Model class that represents the data structure of a bike station retrieved from the JCDecaux API JSON.
     {
         public int number {get;set;}
 
@@ -27,6 +27,6 @@ namespace DublinBikesWeb.Models
         public StandsObject? totalStands {get;set;}
 
         public StandsObject? mainStands { get; set; }
-
+        public string? LastUpdatedUtc { get; internal set; }
     }
 }

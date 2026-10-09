@@ -13,7 +13,10 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
 
-builder.Services.AddHttpClient<IDublinBikeService, DublinBikeService>();
+builder.Services.AddHttpClient<IDublinBikeService, DublinBikeService>(); // Register DublinBikeService with HttpClient
+
+builder.Services.AddMemoryCache(); //register the memory cash service
+builder.Services.AddHostedService<TimedBackgroundCache>(); //register the backgroundservice
 
 var app = builder.Build();
 

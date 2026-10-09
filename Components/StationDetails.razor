@@ -1,0 +1,61 @@
+@using DublinBikesWeb.Models
+@using DublinBikesWeb.Services
+@** This component displays detailed information about a station in a modal dialog. *@
+
+@if (Station != null)
+{
+    <div class="modal-backdrop fade show"></div>
+
+    <div class="modal d-block" tabindex="-1" @onclick="Close">
+        <div class="modal-dialog modal-dialog-centered" @onclick:stopPropagation="true">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">@Station.name</h5>
+                    <button type="button" class="btn-close" @onclick="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <dl class="row mb-0">
+                        <dt class="col-md-4">Station ID</dt>
+                        <dd class="col-sm-8">@Station.number</dd>
+
+                        <dt class="col-sm-4">Address</dt>
+                        <dd class="col-sm-8">@Station.address</dd>
+
+                        <dt class="col-sm-4">Status</dt>
+                        <dd class="col-sm-8">@Station.status</dd>
+
+                        <dt class="col-sm-4">Position</dt>
+                        <dd class="col-sm-8">@Station.position?.latitude, @Station.position?.longitude</dd>
+                        <dt class="col-sm-4">Bikes Available</dt>
+                        <dd class="col-sm-8">@Station?.totalStands?.availabilities?.bikes</dd>
+
+                        <dt class="col-sm-4">Free Stands:</dt>
+                        <dd class="col-sm-8">@Station?.totalStands?.availabilities?.stands</dd>
+
+                        <dt class="col-sm-4">Last Updated:</dt>
+                        <dd class="col-sm-8">@Station?.LastUpdatedUtc</dd>
+
+
+                    </dl>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" @onclick="Close">Close</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public DublinBikesData? Station { get; set; }
+
+    [Parameter]
+    public EventCallback OnClose { get; set; }
+
+    private async Task Close() => await OnClose.InvokeAsync();
+}
